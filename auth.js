@@ -1,25 +1,10 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
+router.use(express.json());
 
-
-const emailValidator = {
-    validator: function(value) {
-      // Regular expression for email validation
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-    },
-    message: props => `${props.value} is not a valid email address!`
-  };
-  
-  const passwordValidator = {
-    validator: function(value) {
-      // Regular expression for password validation
-      return /^(?=.*[A-Z])(?=.*\d).{8,}$/.test(value);
-    },
-    message: props => `${props.value} is not a valid password! Password must contain at least one capital letter, one number, and be at least 8 characters long.`
-  };
-  
-  
   // Define a User model
   const userSchema = new mongoose.Schema({
     email: {
@@ -45,23 +30,55 @@ const emailValidator = {
   const User = mongoose.model('User', userSchema);
   
 
+
+
+
+  // Define a password validator
+  const emailValidator = {
+    validator: function(value) {
+      const isvalid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      if (!isvalid) {
+        throw new Error("Email is not valid");
+      }
+      return isvalid;
+    },
+  };
+    
+    const passwordValidator = {
+      validator: function(value) {
+        // Regular expression for password validation
+        const isvalid = /^(?=.*[A-Z])(?=.*\d).{8,}$/.test(value);
+        if (!isvalid) {throw new Error("Password is not valid");
+      }
+        return isvalid;
+      },
+    };
+
+
+// POST METHODS FOR LOGIN AND SIGNUP
   
-router.post("/register", async (req, res) => {
+  router.post("/register", async (req, res) => {
     try {
       const { email, password } = req.body;
   
       let user = await User.findOne({ email });
       if (user) return res.json({ msg: "USER EXISTS" });
-  
+      if (passwordValidator.validator(password)) {
       const hashedPassword = await bcrypt.hash(password, 10);
       await User.create({ email, password: hashedPassword });
   
-      return res.json({ msg: "CREATED" });
+      return res.json({ msg: "CREATED" });}
+      throw new Error("Password is not valid")
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ msg: "INTERNAL SERVER ERROR" });
+      if (error.name === 'ValidationError') {
+        return res.status(400).json({ msg: error.message });
+      } else {
+        console.error(error);
+        return res.status(500).json({ msg: error.message });
+      }
     }
   });
+  
   
   router.post("/login", async (req, res) => {
     try {
@@ -75,10 +92,8 @@ router.post("/register", async (req, res) => {
   
       const token = jwt.sign({
         email,
-        password,
         createdAt: new Date(),
-        age: user.age, // Ensure your User model has an 'age' field; otherwise, remove this line
-      }, "MY_SECRET", { expiresIn: "1d" });
+      }, "ZohaibMughal", { expiresIn: "1d" });
   
       res.json({
         msg: "LOGGED IN", token
