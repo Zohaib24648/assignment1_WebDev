@@ -1,24 +1,20 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const port = 3000;
-const authRouter = require('./auth');
+const authRouter = require('./modules/auth');
+const crudRouter = require('./modules/crud');
 const app = express();
+const port = 3000;
+
 app.use(express.json());
-
-
-app.use('/', authRouter);
-
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
 app.use(express.urlencoded({ extended: false }));
 
-(async () => {
-  try {
-    await mongoose.connect("mongodb://localhost:27017/WebDev")
+// Connect to MongoDB
+mongoose.connect("mongodb://localhost:27017/WebDev")
+  .then(() => {
     console.log('Connection has been established successfully.');
-  } catch (error) {
-    console.error('Unable to connect to the database:', error);
-  }
-})();
+    // Use routers
+    app.use('/auth', authRouter); // Prefix all auth routes with '/auth'
+    app.use('/meals', crudRouter); // Prefix all meals-related routes with '/meals'
+    app.listen(port, () => console.log(`Server is running on port ${port}`));
+  })
+  .catch(error => console.error('Unable to connect to the database:', error));
