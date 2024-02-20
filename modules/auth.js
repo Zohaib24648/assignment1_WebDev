@@ -7,9 +7,9 @@ router.use(express.json());
 
 
 
+ const token_12 ="ZohaibMughal";
 
-
-  // Define a password validator
+  // Define a email validator
   const emailValidator = {
     validator: function(value) {
       const isvalid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -51,11 +51,22 @@ router.use(express.json());
   
     },
   
-    firstname : String,
-    lastname : String,
-    age: Number,
-    roles : String
+    firstname : {
+      type:String,
+      required:true
+    },
+
+    lastname : {
+      type:String,
+      required:true
+    },
+    age: {type:Number,
+    required:true},
+    roles : {type:String,
+    default:"User"}
   });
+
+
   const User = mongoose.model('User', userSchema);
   
 
@@ -63,18 +74,23 @@ router.use(express.json());
   
   router.post("/register", async (req, res) => {
     try {
-      const { email, password } = req.body;
-  
+      const { email, password,firstname,lastname,age } = req.body;
+      // Check if the email is already in use
       let user = await User.findOne({ email });
       if (user) return res.json({ msg: "This email is already in use" });
+      // Check if the password is valid
       if (passwordValidator.validator(password)) {
       const hashedPassword = await bcrypt.hash(password, 10);
-      await User.create({ email, password: hashedPassword });
-  
-      return res.json({ msg: "CREATED" });}
+      // Create a new user in database and respond
+      await User.create({ email, password: hashedPassword,firstname,lastname,age });
+      return res.status(200).json({ msg: "Successful" });}
+
+      // If the password is invalid, throw an error
       throw new Error("Password must Contain 1 Uppercase, 1 Number and length > 8")
     } catch (error) {
+      // If the error is a validation error(MongoDB), respond with a 400 status code
       if (error.name === 'ValidationError') {
+        console.log("Details do not match the database requirements. Please enter valid details.");
         return res.status(400).json({ msg: error.message });
       } else {
         console.error(error);
@@ -86,18 +102,23 @@ router.use(express.json());
 
   router.post("/registeradmin", async (req, res) => {
     try {
-      const { email, password } = req.body;
-  
+      const { email, password,firstname,lastname,age } = req.body;
+      // Check if the email is already in use
       let user = await User.findOne({ email });
       if (user) return res.json({ msg: "This email is already in use" });
+      // Check if the password is valid
       if (passwordValidator.validator(password)) {
       const hashedPassword = await bcrypt.hash(password, 10);
-      await User.create({ email, password: hashedPassword , roles: ["Admin"]});
-  
-      return res.json({ msg: "CREATED" });}
+      // Create a new user in database and respond
+      await User.create({ email, password: hashedPassword,firstname,lastname,age, roles:"Admin" });
+      return res.status(200).json({ msg: "Successful" });}
+
+      // If the password is invalid, throw an error
       throw new Error("Password must Contain 1 Uppercase, 1 Number and length > 8")
     } catch (error) {
+      // If the error is a validation error(MongoDB), respond with a 400 status code
       if (error.name === 'ValidationError') {
+        console.log("Details do not match the database requirements. Please enter valid details.");
         return res.status(400).json({ msg: error.message });
       } else {
         console.error(error);
@@ -120,7 +141,7 @@ router.use(express.json());
       const token = jwt.sign({
         email,
         createdAt: new Date(),
-      }, "ZohaibMughal", { expiresIn: "1d" });
+      }, token_12, { expiresIn: "1d" });
   
       res.json({
         msg: "LOGGED IN", token
@@ -153,7 +174,7 @@ router.use(express.json());
         email,
         roles: user.roles,
         createdAt: new Date(),
-      }, "ZohaibMughal", { expiresIn: "1d" });
+      }, token_12, { expiresIn: "1d" });
   
       res.json({
         msg: "LOGGED IN", token

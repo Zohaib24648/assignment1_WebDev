@@ -55,7 +55,7 @@ router.post('/meals/addMeal', authenticateToken, requireRole("Admin"), async (re
   }
 });
 
-router.delete('/meals/removeMeal/:mealname', authenticateToken, requireRole("Admin"), async (req, res) => {
+router.delete('/meals/removeMeal', authenticateToken, requireRole("Admin"), async (req, res) => {
   try {
     const meal = await Meal.findOneAndDelete({ mealname: req.params.mealname });
     if (!meal) {
