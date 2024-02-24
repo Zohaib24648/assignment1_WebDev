@@ -8,12 +8,12 @@ router.use(express.json());
 const mealSchema = new mongoose.Schema({
   mealname: { type: String, unique: true, required: true },
   price: { type: Number, required: true },
-  description: { type: String, required: true },
+  description : String,
 });
+//create model using the schema 
+var Meal = mongoose.model("Meal", mealSchema);  
 
-var Meal = mongoose.model("Meal", mealSchema);  //creating
-
-router.get('/meals/viewMeals', authenticateToken, async (req, res) => {
+router.get('/viewMeals', authenticateToken, async (req, res) => {
   try {
     const meals = await Meal.find({});
     res.send(meals);
@@ -36,7 +36,7 @@ function authenticateToken(req, res, next) {
 
 function requireRole(role) {
   return function(req, res, next) {
-    if (!req.user.roles.includes(role)) {
+    if (!req.user.roles == role) {
       return res.status(403).send({ message: `Access denied. Requires ${role} role.` });
     }
     next();
@@ -44,8 +44,9 @@ function requireRole(role) {
 }
 
 //admin can add, update, delete, view meals
-router.post('/meals/addMeal', authenticateToken, requireRole("Admin"), async (req, res) => {
+router.post('/addMeal', authenticateToken, requireRole("Admin"), async (req, res) => {
   const { mealname, price, description } = req.body;
+  console.log(req.body);
   try {
     const meal = new Meal({ mealname, price, description });
     await meal.save();
@@ -55,9 +56,9 @@ router.post('/meals/addMeal', authenticateToken, requireRole("Admin"), async (re
   }
 });
 
-router.delete('/meals/removeMeal', authenticateToken, requireRole("Admin"), async (req, res) => {
+router.delete('/removeMeal', authenticateToken, requireRole("Admin"), async (req, res) => {
   try {
-    const meal = await Meal.findOneAndDelete({ mealname: req.params.mealname });
+    const meal = await Meal.findOneAndDelete({ mealname: req.body.mealname });
     if (!meal) {
       return res.status(404).send({ message: "Meal not found" });
     }
@@ -67,7 +68,7 @@ router.delete('/meals/removeMeal', authenticateToken, requireRole("Admin"), asyn
   }
 });
 
-router.patch('/meals/updateMeal', authenticateToken, requireRole("Admin"), async (req, res) => {
+router.patch('/updateMeal', authenticateToken, requireRole("Admin"), async (req, res) => {
   const { mealname, ...updateData } = req.body;
   const updates = Object.keys(updateData);
   const allowedUpdates = ['price', 'description']; // 'mealname' removed to prevent changing the mealname itself
