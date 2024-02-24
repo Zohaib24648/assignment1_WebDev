@@ -1,0 +1,157 @@
+{
+	"info": {
+		"_postman_id": "bc1fc420-0878-49f4-aba9-18e881e4811e",
+		"name": "CRUD1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32901272"
+	},
+	"item": [
+		{
+			"name": "Remove Meal",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIxQGFkbWluLmNvbSIsInJvbGVzIjoiQWRtaW4iLCJjcmVhdGVkQXQiOiIyMDI0LTAyLTIwVDIwOjQyOjM5LjY1MloiLCJpYXQiOjE3MDg0NjE3NTksImV4cCI6MTcwODU0ODE1OX0.Fy2kmsorvY5qSC_m7zKshprDY8Oi6tJzD0i6LPiD9no",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"mealname\": \"Chicken Pasta\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/meals/removeMeal",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"meals",
+						"removeMeal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Meal",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIxQGFkbWluLmNvbSIsInJvbGVzIjoiQWRtaW4iLCJjcmVhdGVkQXQiOiIyMDI0LTAyLTIwVDIwOjQyOjM5LjY1MloiLCJpYXQiOjE3MDg0NjE3NTksImV4cCI6MTcwODU0ODE1OX0.Fy2kmsorvY5qSC_m7zKshprDY8Oi6tJzD0i6LPiD9no",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"mealname\": \"Chicken Pasta\",\r\n    \"price\": 12.99,\r\n    \"description\": \"Delicious pasta with grilled chicken and creamy Alfredo sauce.\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/meals/addMeal",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"meals",
+						"addMeal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "View Meal",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIxQGFkbWluLmNvbSIsInJvbGVzIjoiQWRtaW4iLCJjcmVhdGVkQXQiOiIyMDI0LTAyLTIwVDIwOjM0OjE3LjUwMFoiLCJpYXQiOjE3MDg0NjEyNTcsImV4cCI6MTcwODU0NzY1N30.Dfv2AgQl1KnNVCQ0Yzf_rWtZJ8hiq2Bi_U_Oe8MCo20",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/meals/viewMeals",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"meals",
+						"viewMeals"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Meal",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIxQGFkbWluLmNvbSIsInJvbGVzIjoiQWRtaW4iLCJjcmVhdGVkQXQiOiIyMDI0LTAyLTI0VDA1OjE5OjAyLjk4M1oiLCJpYXQiOjE3MDg3NTE5NDIsImV4cCI6MTcwODgzODM0Mn0.Wey4RdbZmifxx4BXXFtqWytJVvzW_gyU8rUoFbclWGI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"mealname\": \"Chicken Pasta\",\r\n    \"price\": 3.99,\r\n    \"description\": \"Delicious pasta with grilled chicken and Ketchup\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/meals/updateMeal",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"meals",
+						"updateMeal"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
